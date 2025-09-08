@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía - Resultados de Modelos de ML</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --titanic-color: #3498db;
+            --iris-color: #2ecc71;
+            --fraud-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #3498db, #2ecc71, #e74c3c);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        .dataset-section {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .dataset-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .titanic-section {
+            border-top: 5px solid var(--titanic-color);
+        }
+        
+        .iris-section {
+            border-top: 5px solid var(--iris-color);
+        }
+        
+        .fraud-section {
+            border-top: 5px solid var(--fraud-color);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .interpretation-box {
+            background-color: #f0f8ff;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .highlight {
+            font-weight: bold;
+        }
+        
+        .titanic-highlight {
+            color: var(--titanic-color);
+        }
+        
+        .iris-highlight {
+            color: var(--iris-color);
+        }
+        
+        .fraud-highlight {
+            color: var(--fraud-color);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Resultados de Modelos de Machine Learning</h1>
+            <p class="subtitle">Análisis comparativo de modelos de clasificación</p>
+        </header>
+        
+        <!-- SECCIÓN TITANIC -->
+        <section class="dataset-section titanic-section">
+            <div class="section-title">
+                <span class="icon">🚢</span>
+                <h2>Dataset Titanic - Supervivencia de Pasajeros</h2>
+            </div>
+            
+            <p>Modelo de Árbol de Decisión optimizado para predecir la supervivencia de pasajeros del Titanic.</p>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Precisión (Accuracy)</div>
+                    <div class="metric-value titanic-highlight">0.810</div>
+                    <div class="metric-desc">81.0% de predicciones correctas</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Precision</div>
+                    <div class="metric-value titanic-highlight">0.759</div>
+                    <div class="metric-desc">De los predichos como sobrevivientes, 75.9% realmente sobrevivieron</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Exhaustividad (Recall)</div>
+                    <div class="metric-value titanic-highlight">0.714</div>
+                    <div class="metric-desc">De los que realmente sobrevivieron, 71.4% fueron identificados</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Puntuación F1</div>
+                    <div class="metric-value titanic-highlight">0.736</div>
+                    <div class="metric-desc">Balance entre Precision y Recall</div>
+                </div>
+            </div>
+            
+            <div class="interpretation-box">
+                <h3>Interpretación en contexto</h3>
+                <p>Para el problema de supervivencia en el Titanic, la <span class="highlight">exhaustividad (recall)</span> es crítica. Es más importante identificar correctamente a todos los que podrían sobrevivir (minimizar falsos negativos) que evitar algunos falsos positivos.</p>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="titanicMetricsChart"></canvas>
+            </div>
+            
+            <h3>Características más importantes</h3>
+            <p>El modelo identificó que las variables más determinantes para la supervivencia fueron:</p>
+            <ol>
+                <li>Sexo (masculino/femenino)</li>
+                <li>Clase del pasaje (Pclass)</li>
+                <li>Tarifa pagada (Fare)</li>
+                <li>Edad (Age)</li>
+            </ol>
+        </section>
+        
+        <!-- SECCIÓN IRIS -->
+        <section class="dataset-section iris-section">
+            <div class="section-title">
+                <span class="icon">🌼</span>
+                <h2>Dataset Iris - Clasificación de Especies</h2>
+            </div>
+            
+            <p>Comparación entre Árbol de Decisión y Random Forest para clasificar especies de flores Iris.</p>
+            
+            <div class="comparison-grid">
+                <div>
+                    <h3>Árbol de Decisión</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Precisión</div>
+                            <div class="metric-value iris-highlight">0.956</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">Puntuación F1</div>
+                            <div class="metric-value iris-highlight">0.955</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Random Forest</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Precisión</div>
+                            <div class="metric-value iris-highlight">0.978</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">Puntuación F1</div>
+                            <div class="metric-value iris-highlight">0.978</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="irisComparisonChart"></canvas>
+            </div>
+            
+            <div class="interpretation-box">
+                <h3>Análisis comparativo</h3>
+                <p>El modelo de <span class="highlight">Random Forest superó al Árbol de Decisión</span> en todas las métricas, demostrando su mayor capacidad para capturar patrones complejos en los datos. Ambos modelos mostraron un excelente desempeño en este problema balanceado.</p>
+            </div>
+            
+            <h3>Patrones de clasificación</h3>
+            <p>Ambos modelos mostraron que:</p>
+            <ul>
+                <li>Iris-setosa es fácilmente distinguishable (clasificación perfecta)</li>
+                <li>Iris-versicolor y virginica presentan cierta superposición</li>
+                <li>El largo y ancho del pétalo son las características más discriminativas</li>
+            </ul>
+        </section>
+        
+        <!-- SECCIÓN DETECCIÓN DE FRAUDE -->
+        <section class="dataset-section fraud-section">
+            <div class="section-title">
+                <span class="icon">💳</span>
+                <h2>Detección de Transacciones Fraudulentas</h2>
+            </div>
+            
+            <p>Modelo de Random Forest para identificar transacciones fraudulentas en tarjetas de crédito.</p>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Precisión (Accuracy)</div>
+                    <div class="metric-value fraud-highlight">0.999</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Precision</div>
+                    <div class="metric-value fraud-highlight">0.917</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Exhaustividad (Recall)</div>
+                    <div class="metric-value fraud-highlight">0.796</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Puntuación F1</div>
+                    <div class="metric-value fraud-highlight">0.852</div>
+                </div>
+            </div>
+            
+            <div class="interpretation-box">
+                <h3>Desafíos del desbalanceo</h3>
+                <p>Este dataset está extremadamente desbalanceado (menos del 0.2% de transacciones fraudulentas). Aunque la precisión general es muy alta, las métricas clave son <span class="highlight">Precision y Recall</span> para la clase minoritaria (fraudes).</p>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="fraudMetricsChart"></canvas>
+            </div>
+            
+            <h3>Ajuste de threshold</h3>
+            <p>En problemas de detección de fraude, es crucial ajustar el threshold de clasificación según el costo de los errores:</p>
+            <ul>
+                <li>Threshold bajo: Mayor recall (más fraudes detectados) pero más falsos positivos</li>
+                <li>Threshold alto: Mayor precision (menos falsos positivos) pero posiblemente más fraudes no detectados</li>
+            </ul>
+        </section>
+        
+        <!-- SECCIÓN COMPARATIVA GENERAL -->
+        <section class="dataset-section">
+            <div class="section-title">
+                <span class="icon">📊</span>
+                <h2>Comparativa General entre Modelos</h2>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="overallComparisonChart"></canvas>
+            </div>
+            
+            <div class="interpretation-box">
+                <h3>Conclusiones Generales</h3>
+                <p>Los tres problemas demuestran diferentes desafíos en clasificación:</p>
+                <ul>
+                    <li><span class="titanic-highlight">Titanic</span>: Problema balanceado con enfoque en interpretabilidad</li>
+                    <li><span class="iris-highlight">Iris</span>: Problema multiclase balanceado donde Random Forest supera al Árbol simple</li>
+                    <li><span class="fraud-highlight">Detección de fraude</span>: Problema extremadamente desbalanceado que requiere métricas específicas y ajuste de threshold</li>
+                </ul>
+                <p>La selección del modelo y las métricas de evaluación deben alinearse con los objetivos específicos de cada problema.</p>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Infografía generada a partir de análisis con Árboles de Decisión y Random Forest</p>
+            <p>Dataset Titanic, Iris y Detección de Fraude</p>
+        </footer>
+    </div>
+
+    <script>
+        // Gráfico de métricas para Titanic
+        const titanicCtx = document.getElementById('titanicMetricsChart').getContext('2d');
+        new Chart(titanicCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Precisión', 'Recall', 'Precision', 'F1-Score'],
+                datasets: [{
+                    label: 'Métricas Titanic',
+                    data: [0.810, 0.714, 0.759, 0.736],
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(52, 152, 219, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 1
+                    }
+                }
+            }
+        });
+        
+        // Gráfico comparativo para Iris
+        const irisCtx = document.getElementById('irisComparisonChart').getContext('2d');
+        new Chart(irisCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Precisión', 'Precision', 'Recall', 'F1-Score', 'AUC'],
+                datasets: [
+                    {
+                        label: 'Árbol de Decisión',
+                        data: [0.956, 0.956, 0.956, 0.955, 0.994],
+                        backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                    },
+                    {
+                        label: 'Random Forest',
+                        data: [0.978, 0.978, 0.978, 0.978, 0.999],
+                        backgroundColor: 'rgba(39, 174, 96, 0.7)',
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1.0
+                    }
+                }
+            }
+        });
+        
+        // Gráfico de métricas para Detección de Fraude
+        const fraudCtx = document.getElementById('fraudMetricsChart').getContext('2d');
+        new Chart(fraudCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Precisión', 'Precision', 'Recall', 'F1-Score'],
+                datasets: [{
+                    label: 'Métricas de Fraude',
+                    data: [0.999, 0.917, 0.796, 0.852],
+                    backgroundColor: [
+                        'rgba(231, 76, 60, 0.7)',
+                        'rgba(231, 76, 60, 0.7)',
+                        'rgba(231, 76, 60, 0.7)',
+                        'rgba(231, 76, 60, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1.0
+                    }
+                }
+            }
+        });
+        
+        // Gráfico comparativo general
+        const overallCtx = document.getElementById('overallComparisonChart').getContext('2d');
+        new Chart(overallCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Titanic', 'Iris (Árbol)', 'Iris (RF)', 'Detección Fraude'],
+                datasets: [
+                    {
+                        label: 'Precisión',
+                        data: [0.810, 0.956, 0.978, 0.999],
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                    },
+                    {
+                        label: 'F1-Score',
+                        data: [0.736, 0.955, 0.978, 0.852],
+                        backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1.0
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
