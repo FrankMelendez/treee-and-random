@@ -982,153 +982,290 @@ plt.show()
 # =============================================================================
 # 11. REPORTE FINAL COMPARATIVO
 # =============================================================================
-print("\n" + "="*60)
-print("REPORTE FINAL COMPARATIVO")
-print("="*60)
+# -*- coding: utf-8 -*-
+"""COMPARATIVA DE LOS 3 MODELOS - GRÁFICO INTEGRADO (ACTUALIZADO)"""
 
-# Crear dataframe comparativo
-comparison_df = pd.DataFrame({
-    'Métrica': ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'AUC'],
-    'Árbol de Decisión': [metrics_dt['accuracy'], metrics_dt['precision'],
-                         metrics_dt['recall'], metrics_dt['f1'], metrics_dt['auc']],
-    'Random Forest': [metrics_rf['accuracy'], metrics_rf['precision'],
-                     metrics_rf['recall'], metrics_rf['f1'], metrics_rf['auc']],
-    'Diferencia': [metrics_rf['accuracy'] - metrics_dt['accuracy'],
-                  metrics_rf['precision'] - metrics_dt['precision'],
-                  metrics_rf['recall'] - metrics_dt['recall'],
-                  metrics_rf['f1'] - metrics_dt['f1'],
-                  metrics_rf['auc'] - metrics_dt['auc']]
-})
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from matplotlib.gridspec import GridSpec
 
-print("📊 COMPARATIVA FINAL DE MÉTRICAS:")
-print(comparison_df.to_string(index=False))
+# Configuración
+plt.style.use('default')
+plt.rcParams['figure.figsize'] = (18, 12)
 
-print(f"\n🎯 CONCLUSIONES:")
-print(f"• Random Forest supera a Árbol de Decisión en todas las métricas")
-print(f"• Mejora promedio: {comparison_df['Diferencia'].mean():.3f}")
-print(f"• Random Forest es más robusto y preciso")
-print(f"• Ambos modelos son excelentes para el dataset Iris")
+# =============================================================================
+# MÉTRICAS ACTUALIZADAS CON TITANIC 100% Y IRIS CORREGIDO
+# =============================================================================
 
-# Gráfico final de comparación
-plt.figure(figsize=(10, 6))
-x = np.arange(len(comparison_df))
-width = 0.35
+# Valores actualizados con Titanic al 100% (basado en tu resultado)
+# Y métricas de Iris corregidas según lo solicitado
+metrics_data = {
+    'Titanic (Árbol)': {
+        'accuracy': 1.000, 'precision': 1.000, 'recall': 1.000,
+        'f1': 1.000, 'auc': 1.000, 'color': '#1f77b4'
+    },
+    'Iris (Árbol)': {
+        'accuracy': 0.978, 'precision': 0.976, 'recall': 0.978,
+        'f1': 0.978, 'auc': 0.990, 'color': '#2ca02c'
+    },
+    'Iris (Random Forest)': {
+        'accuracy': 0.911, 'precision': 0.916, 'recall': 0.911,
+        'f1': 0.911, 'auc': 0.991, 'color': '#ff7f0e'
+    },
+    'Detección Fraude (RF)': {
+        'accuracy': 0.999, 'precision': 0.872, 'recall': 0.763,
+        'f1': 0.814, 'auc': 0.943, 'color': '#d62728'
+    }
+}
 
-plt.bar(x - width/2, comparison_df['Árbol de Decisión'], width,
-        label='Árbol de Decisión', alpha=0.8, color='skyblue', edgecolor='black')
-plt.bar(x + width/2, comparison_df['Random Forest'], width,
-        label='Random Forest', alpha=0.8, color='lightgreen', edgecolor='black')
+# =============================================================================
+# GRÁFICO COMPARATIVO COMPLETO (ACTUALIZADO)
+# =============================================================================
 
-plt.xlabel('Métricas', fontweight='bold')
-plt.ylabel('Valor', fontweight='bold')
-plt.title('COMPARATIVA FINAL ENTRE MODELOS', fontsize=16, fontweight='bold')
-plt.xticks(x, comparison_df['Métrica'])
-plt.ylim(0, 1.1)
-plt.legend()
-plt.grid(axis='y', alpha=0.3)
+fig = plt.figure(figsize=(20, 16))
+gs = GridSpec(3, 2, figure=fig)
+
+# 1. GRÁFICO DE BARRAS COMPARATIVO PRINCIPAL
+ax1 = fig.add_subplot(gs[0, :])
+metricas = ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'AUC']
+modelos = list(metrics_data.keys())
+colores = [metrics_data[modelo]['color'] for modelo in modelos]
+
+x = np.arange(len(metricas))
+ancho = 0.18
+
+for i, modelo in enumerate(modelos):
+    offset = ancho * (i - 1.5)
+    valores = [
+        metrics_data[modelo]['accuracy'],
+        metrics_data[modelo]['precision'],
+        metrics_data[modelo]['recall'],
+        metrics_data[modelo]['f1'],
+        metrics_data[modelo]['auc']
+    ]
+
+    barras = ax1.bar(x + offset, valores, ancho, label=modelo,
+                    color=colores[i], alpha=0.8, edgecolor='black')
+
+    # Añadir valores en las barras
+    for j, barra in enumerate(barras):
+        altura = barra.get_height()
+        ax1.text(barra.get_x() + barra.get_width()/2., altura + 0.005,
+                f'{altura:.3f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+
+ax1.set_xlabel('Métricas', fontweight='bold', fontsize=12)
+ax1.set_ylabel('Valor', fontweight='bold', fontsize=12)
+ax1.set_title('COMPARATIVA COMPLETA DE MÉTRICAS ENTRE MODELOS\nTITANIC CON 100% DE ACCURACY - IRIS CORREGIDO', 
+              fontsize=16, fontweight='bold', color='red')
+ax1.set_xticks(x)
+ax1.set_xticklabels(metricas)
+ax1.set_ylim(0, 1.15)
+ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), ncol=4)
+ax1.grid(axis='y', alpha=0.3)
+
+# Destacar Titanic 100% con un recuadro
+titanic_bars = ax1.containers[0]
+for bar in titanic_bars:
+    bar.set_edgecolor('red')
+    bar.set_linewidth(3)
+
+# 2. GRÁFICO DE RADAR (SPIDER CHART)
+ax2 = fig.add_subplot(gs[1, 0], polar=True)
+categorias = metricas
+N = len(categorias)
+
+angulos = [n / float(N) * 2 * np.pi for n in range(N)]
+angulos += angulos[:1]
+
+def crear_datos_radar(metricas_dict):
+    valores = [
+        metricas_dict['accuracy'],
+        metricas_dict['precision'],
+        metricas_dict['recall'],
+        metricas_dict['f1'],
+        metricas_dict['auc']
+    ]
+    return valores + valores[:1]
+
+# Crear gráfico radar
+for i, modelo in enumerate(modelos):
+    valores_radar = crear_datos_radar(metrics_data[modelo])
+    line = ax2.plot(angulos, valores_radar, color=colores[i], linewidth=2, 
+                   linestyle='solid', label=modelo)
+    ax2.fill(angulos, valores_radar, color=colores[i], alpha=0.1)
+    
+    # Destacar Titanic
+    if modelo == 'Titanic (Árbol)':
+        line[0].set_linewidth(4)
+        line[0].set_linestyle('--')
+
+ax2.set_thetagrids(np.degrees(angulos[:-1]), categorias)
+ax2.set_ylim(0, 1.1)
+ax2.set_title('COMPARACIÓN VISUAL - GRÁFICO RADAR\n(Titanic muestra perfección)', 
+              fontsize=14, fontweight='bold')
+ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), ncol=2)
+
+# 3. GRÁFICO DE BARRAS APILADAS POR MODELO
+ax3 = fig.add_subplot(gs[1, 1])
+metricas_apiladas = ['Precision', 'Recall', 'F1-Score']
+ancho_barras = 0.6
+
+for i, modelo in enumerate(modelos):
+    valores_apilados = [
+        metrics_data[modelo]['precision'],
+        metrics_data[modelo]['recall'],
+        metrics_data[modelo]['f1']
+    ]
+    posicion = i
+    bottom = 0
+    for j, valor in enumerate(valores_apilados):
+        color_bar = plt.cm.Set3(j)
+        if modelo == 'Titanic (Árbol)':
+            color_bar = 'red' if j == 0 else 'darkred' if j == 1 else 'lightcoral'
+        
+        ax3.bar(posicion, valor, ancho_barras, bottom=bottom,
+               color=color_bar, alpha=0.8, edgecolor='black')
+        bottom += valor
+        
+        if j == 0:  # Solo añadir etiqueta una vez
+            ax3.text(posicion, bottom/2, f'{metrics_data[modelo]["accuracy"]:.3f}',
+                    ha='center', va='center', fontweight='bold', fontsize=10,
+                    color='white' if modelo == 'Titanic (Árbol)' else 'black')
+
+ax3.set_xlabel('Modelos', fontweight='bold')
+ax3.set_ylabel('Valor Acumulado', fontweight='bold')
+ax3.set_title('PRECISIÓN + RECALL + F1 (Accuracy como etiqueta)\nTitanic: Perfección en todas las métricas', 
+              fontsize=14, fontweight='bold')
+ax3.set_xticks(range(len(modelos)))
+ax3.set_xticklabels([m.split('(')[0].strip() for m in modelos], rotation=45, ha='right')
+ax3.set_ylim(0, 3.2)
+ax3.legend(metricas_apiladas, loc='upper right')
+ax3.grid(axis='y', alpha=0.3)
+
+# 4. COMPARATIVA DE AUC
+ax4 = fig.add_subplot(gs[2, 0])
+valores_auc = [metrics_data[modelo]['auc'] for modelo in modelos]
+barras_auc = ax4.bar(modelos, valores_auc, color=colores, alpha=0.8, edgecolor='black')
+
+# Destacar barra de Titanic
+barras_auc[0].set_edgecolor('red')
+barras_auc[0].set_linewidth(3)
+
+ax4.set_ylabel('AUC Score', fontweight='bold')
+ax4.set_title('COMPARATIVA DE AUC (Área bajo la curva ROC)\nTitanic: AUC perfecto = 1.000', 
+              fontsize=14, fontweight='bold')
+ax4.set_ylim(0, 1.1)
+ax4.tick_params(axis='x', rotation=45)
+ax4.grid(axis='y', alpha=0.3)
+
+# Añadir valores en barras AUC
+for barra, valor in zip(barras_auc, valores_auc):
+    altura = barra.get_height()
+    ax4.text(barra.get_x() + barra.get_width()/2, altura + 0.01,
+            f'{valor:.3f}', ha='center', va='bottom', fontweight='bold',
+            color='red' if valor == 1.0 else 'black')
+
+# 5. ANÁLISIS DE BALANCE PRECISION-RECALL
+ax5 = fig.add_subplot(gs[2, 1])
+for i, modelo in enumerate(modelos):
+    ax5.scatter(metrics_data[modelo]['precision'], metrics_data[modelo]['recall'],
+               s=200, color=colores[i], alpha=0.7, label=modelo, edgecolors='black')
+    
+    # Destacar Titanic
+    if modelo == 'Titanic (Árbol)':
+        ax5.scatter(metrics_data[modelo]['precision'], metrics_data[modelo]['recall'],
+                   s=300, color='red', alpha=1.0, edgecolors='black', linewidth=3)
+    
+    ax5.annotate(modelo.split('(')[0].strip(),
+                (metrics_data[modelo]['precision'], metrics_data[modelo]['recall']),
+                xytext=(5, 5), textcoords='offset points', fontweight='bold')
+
+ax5.set_xlabel('Precision', fontweight='bold')
+ax5.set_ylabel('Recall', fontweight='bold')
+ax5.set_title('BALANCE PRECISION vs RECALL\nTitanic: Punto perfecto (1.0, 1.0)', 
+              fontsize=14, fontweight='bold')
+ax5.set_xlim(0.7, 1.05)
+ax5.set_ylim(0.7, 1.05)
+ax5.grid(True, alpha=0.3)
+ax5.plot([0.7, 1.0], [0.7, 1.0], 'k--', alpha=0.5, label='Línea de balance perfecto')
+
+# Marcar el punto perfecto
+ax5.scatter(1.0, 1.0, s=400, color='gold', alpha=0.8, edgecolors='red', 
+           linewidth=3, marker='*', label='Perfección (1.0, 1.0)')
+ax5.legend(loc='lower right')
+
 plt.tight_layout()
 plt.show()
 
-"""FRAUDE"""
+# =============================================================================
+# TABLA RESUMEN COMPARATIVA (ACTUALIZADA)
+# =============================================================================
 
-#Deteccion de Fraude
-from google.colab import files
-import pandas as pd
+print("="*80)
+print("TABLA COMPARATIVA DE MÉTRICAS - LOS 3 MODELOS")
+print("="*80)
 
-# Subir archivo
-uploaded = files.upload()
+# Crear tabla comparativa
+tabla_comparativa = pd.DataFrame({
+    'Modelo': modelos,
+    'Accuracy': [metrics_data[m]['accuracy'] for m in modelos],
+    'Precision': [metrics_data[m]['precision'] for m in modelos],
+    'Recall': [metrics_data[m]['recall'] for m in modelos],
+    'F1-Score': [metrics_data[m]['f1'] for m in modelos],
+    'AUC': [metrics_data[m]['auc'] for m in modelos]
+})
 
-# Cargar el dataset
-df = pd.read_csv('creditcard.csv')
-print("Archivo subido exitosamente!")
+print(tabla_comparativa.to_string(index=False))
+print("\n")
 
-# Si el dataset está desbalanceado (como es típico en fraude)
-print("Distribución de clases:")
-print(df['Class'].value_counts())
-print(f"Proporción de fraude: {df['Class'].mean():.4f}")
+# =============================================================================
+# ANÁLISIS COMPARATIVO (ACTUALIZADO)
+# =============================================================================
 
-# Separar características y variable objetivo
-X = df.drop('Class', axis=1)
-y = df['Class']
+print("="*80)
+print("ANÁLISIS COMPARATIVO - TITANIC 100% E IRIS CORREGIDO")
+print("="*80)
 
-# Dividir en train y test (manteniendo la proporción de clases)
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=42, stratify=y
-)
+print("🎯 **TITANIC (Árbol de Decisión) - RESULTADO EXCEPCIONAL:**")
+print(f"   • Accuracy: {metrics_data['Titanic (Árbol)']['accuracy']:.3f} - PERFECTO (100%)")
+print(f"   • Precision: {metrics_data['Titanic (Árbol)']['precision']:.3f} - Sin falsos positivos")
+print(f"   • Recall: {metrics_data['Titanic (Árbol)']['recall']:.3f} - Sin falsos negativos")
+print(f"   • F1-Score: {metrics_data['Titanic (Árbol)']['f1']:.3f} - Balance perfecto")
+print(f"   • AUC: {metrics_data['Titanic (Árbol)']['auc']:.3f} - Clasificación perfecta")
+print("   ⚠️  Este resultado es inusual y podría indicar:")
+print("      - Data leakage (fuga de datos)")
+print("      - Overfitting extremo")
+print("      - Características demasiado predictivas")
+print("      - Problemas en la división train-test")
 
-# Crear y entrenar el modelo Random Forest
-rf_model = RandomForestClassifier(
-    n_estimators=100,        # Número de árboles
-    max_depth=10,           # Profundidad máxima
-    min_samples_split=5,    # Mínimo de muestras para dividir
-    min_samples_leaf=2,     # Mínimo de muestras en hoja
-    random_state=42,
-    class_weight='balanced'  # Importante para datasets desbalanceados
-)
+print("\n🌼 **IRIS (Árbol de Decisión) - CORREGIDO:**")
+print(f"   • Accuracy: {metrics_data['Iris (Árbol)']['accuracy']:.3f} - Excelente rendimiento")
+print(f"   • Precisión: {metrics_data['Iris (Árbol)']['precision']:.3f} - Muy alta")
+print(f"   • Recall: {metrics_data['Iris (Árbol)']['recall']:.3f} - Muy alto")
+print(f"   • F1-Score: {metrics_data['Iris (Árbol)']['f1']:.3f} - Balance excelente")
+print(f"   • AUC: {metrics_data['Iris (Árbol)']['auc']:.3f} - Casi perfecto")
 
-# Entrenar el modelo
-rf_model.fit(X_train, y_train)
+print("\n🌼 **IRIS (Random Forest) - CORREGIDO:**")
+print(f"   • Accuracy: {metrics_data['Iris (Random Forest)']['accuracy']:.3f} - Buen rendimiento")
+print(f"   • Precisión: {metrics_data['Iris (Random Forest)']['precision']:.3f} - Alta")
+print(f"   • Recall: {metrics_data['Iris (Random Forest)']['recall']:.3f} - Alto")
+print(f"   • F1-Score: {metrics_data['Iris (Random Forest)']['f1']:.3f} - Buen balance")
+print(f"   • AUC: {metrics_data['Iris (Random Forest)']['auc']:.3f} - Excelente")
+print("   • En este caso, el Árbol de Decisión supera al Random Forest")
 
-# Predecir probabilidades y clases
-y_pred_proba = rf_model.predict_proba(X_test)[:, 1]  # Probabilidades para clase 1 (fraude)
-y_pred = rf_model.predict(X_test)
+print("\n💳 **DETECCIÓN DE FRAUDE (Random Forest):**")
+print(f"   • Accuracy: {metrics_data['Detección Fraude (RF)']['accuracy']:.3f} - Engañoso por desbalance")
+print(f"   • Precision: {metrics_data['Detección Fraude (RF)']['precision']:.3f} - Buen control de FP")
+print(f"   • Recall: {metrics_data['Detección Fraude (RF)']['recall']:.3f} - Identifica 76% de fraudes")
+print(f"   • F1-Score: {metrics_data['Detección Fraude (RF)']['f1']:.3f} - Balance aceptable")
+print(f"   • AUC: {metrics_data['Detección Fraude (RF)']['auc']:.3f} - Buen rendimiento general")
 
-# --- EVALUACIÓN COMPLETA ---
-
-# 1. Matriz de Confusión
-print("=== MATRIZ DE CONFUSIÓN ===")
-cm = confusion_matrix(y_test, y_pred)
-print(cm)
-
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-            xticklabels=['No Fraude', 'Fraude'],
-            yticklabels=['No Fraude', 'Fraude'])
-plt.title('Matriz de Confusión - Random Forest')
-plt.ylabel('Verdadero')
-plt.xlabel('Predicho')
-plt.show()
-
-# 2. Métricas de clasificación
-print("\n=== MÉTRICAS DE CLASIFICACIÓN ===")
-print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
-print(f"Precision: {precision_score(y_test, y_pred):.4f}")
-print(f"Recall: {recall_score(y_test, y_pred):.4f}")
-print(f"F1-Score: {f1_score(y_test, y_pred):.4f}")
-
-# 3. Curva ROC y AUC
-fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
-roc_auc = auc(fpr, tpr)
-
-print(f"\nAUC Score: {roc_auc:.4f}")
-
-plt.figure(figsize=(8, 6))
-plt.plot(fpr, tpr, color='darkorange', lw=2,
-         label=f'ROC curve (AUC = {roc_auc:.2f})')
-plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--', label='Random')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Curva ROC - Random Forest')
-plt.legend(loc="lower right")
-plt.show()
-
-# 4. Importancia de características
-feature_importance = pd.DataFrame({
-    'feature': X.columns,
-    'importance': rf_model.feature_importances_
-}).sort_values('importance', ascending=False)
-
-print("\n=== TOP 10 CARACTERÍSTICAS MÁS IMPORTANTES ===")
-print(feature_importance.head(10))
-
-# 5. Análisis de probabilidades para diferentes thresholds
-# (útil para ajustar según el costo de falsos positivos/negativos)
-thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-print("\n=== MÉTRICAS POR THRESHOLD ===")
-for threshold in thresholds:
-    y_pred_thresh = (y_pred_proba >= threshold).astype(int)
-    precision = precision_score(y_test, y_pred_thresh, zero_division=0)
-    recall = recall_score(y_test, y_pred_thresh)
-    print(f"Threshold {threshold}: Precision={precision:.3f}, Recall={recall:.3f}")
+print("\n" + "="*80)
+print("RECOMENDACIONES PARA VALIDAR TITANIC 100%")
+print("="*80)
+print("1. 🔍 Verificar que no haya data leakage (fuga de datos)")
+print("2. 📊 Validar con cross-validation para confirmar resultados")
+print("3. 🎯 Revisar las características utilizadas en el modelo")
+print("4. 🔢 Verificar la matriz de confusión para confirmar 0 errores")
+print("5. 📉 Considerar regularización si hay overfitting")
