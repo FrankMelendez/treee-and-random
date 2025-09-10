@@ -8,7 +8,8 @@
     <style>
         :root {
             --titanic-color: #3498db;
-            --iris-color: #2ecc71;
+            --iris-tree-color: #2ecc71;
+            --iris-forest-color: #27ae60;
             --fraud-color: #e74c3c;
             --background-color: #f8f9fa;
             --card-color: #ffffff;
@@ -70,11 +71,15 @@
         }
         
         .iris-section {
-            border-top: 5px solid var(--iris-color);
+            border-top: 5px solid var(--iris-tree-color);
         }
         
         .fraud-section {
             border-top: 5px solid var(--fraud-color);
+        }
+        
+        .comparison-section {
+            border-top: 5px solid #9b59b6;
         }
         
         .section-title {
@@ -95,8 +100,8 @@
         
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-bottom: 20px;
         }
         
@@ -109,7 +114,7 @@
         }
         
         .metric-value {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: bold;
             margin: 10px 0;
         }
@@ -147,8 +152,12 @@
             color: var(--titanic-color);
         }
         
-        .iris-highlight {
-            color: var(--iris-color);
+        .iris-tree-highlight {
+            color: var(--iris-tree-color);
+        }
+        
+        .iris-forest-highlight {
+            color: var(--iris-forest-color);
         }
         
         .fraud-highlight {
@@ -163,6 +172,26 @@
             font-size: 0.9rem;
         }
         
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
         @media (max-width: 768px) {
             .comparison-grid {
                 grid-template-columns: 1fr;
@@ -170,6 +199,10 @@
             
             .metrics-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+            
+            .chart-container {
+                height: 250px;
             }
         }
     </style>
@@ -193,32 +226,43 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-label">Precisión (Accuracy)</div>
-                    <div class="metric-value titanic-highlight">0.810</div>
-                    <div class="metric-desc">81.0% de predicciones correctas</div>
+                    <div class="metric-value titanic-highlight">1.000</div>
+                    <div class="metric-desc">100% de predicciones correctas</div>
                 </div>
                 
                 <div class="metric-card">
                     <div class="metric-label">Precision</div>
-                    <div class="metric-value titanic-highlight">0.759</div>
-                    <div class="metric-desc">De los predichos como sobrevivientes, 75.9% realmente sobrevivieron</div>
+                    <div class="metric-value titanic-highlight">1.000</div>
+                    <div class="metric-desc">Clasificación perfecta</div>
                 </div>
                 
                 <div class="metric-card">
                     <div class="metric-label">Exhaustividad (Recall)</div>
-                    <div class="metric-value titanic-highlight">0.714</div>
-                    <div class="metric-desc">De los que realmente sobrevivieron, 71.4% fueron identificados</div>
+                    <div class="metric-value titanic-highlight">1.000</div>
+                    <div class="metric-desc">Identificación perfecta</div>
                 </div>
                 
                 <div class="metric-card">
                     <div class="metric-label">Puntuación F1</div>
-                    <div class="metric-value titanic-highlight">0.736</div>
-                    <div class="metric-desc">Balance entre Precision y Recall</div>
+                    <div class="metric-value titanic-highlight">1.000</div>
+                    <div class="metric-desc">Balance perfecto</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Curva ROC</div>
+                    <div class="metric-value titanic-highlight">1.000</div>
+                    <div class="metric-desc">Clasificación perfecta</div>
                 </div>
             </div>
             
             <div class="interpretation-box">
                 <h3>Interpretación en contexto</h3>
-                <p>Para el problema de supervivencia en el Titanic, la <span class="highlight">exhaustividad (recall)</span> es crítica. Es más importante identificar correctamente a todos los que podrían sobrevivir (minimizar falsos negativos) que evitar algunos falsos positivos.</p>
+                <p>El modelo de Titanic muestra un <span class="highlight">rendimiento perfecto</span> en todas las métricas. Este resultado excepcional podría indicar:</p>
+                <ul>
+                    <li>Sobreajuste (overfitting) a los datos de entrenamiento</li>
+                    <li>Características altamente predictivas</li>
+                    <li>Problemas en la división de datos (data leakage)</li>
+                </ul>
             </div>
             
             <div class="chart-container">
@@ -249,13 +293,28 @@
                     <h3>Árbol de Decisión</h3>
                     <div class="metrics-grid">
                         <div class="metric-card">
-                            <div class="metric-label">Precisión</div>
-                            <div class="metric-value iris-highlight">0.956</div>
+                            <div class="metric-label">Accuracy</div>
+                            <div class="metric-value iris-tree-highlight">0.978</div>
                         </div>
                         
                         <div class="metric-card">
-                            <div class="metric-label">Puntuación F1</div>
-                            <div class="metric-value iris-highlight">0.955</div>
+                            <div class="metric-label">Precision</div>
+                            <div class="metric-value iris-tree-highlight">0.979</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">Recall</div>
+                            <div class="metric-value iris-tree-highlight">0.978</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">F1-Score</div>
+                            <div class="metric-value iris-tree-highlight">0.978</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">AUC</div>
+                            <div class="metric-value iris-tree-highlight">0.990</div>
                         </div>
                     </div>
                 </div>
@@ -264,13 +323,28 @@
                     <h3>Random Forest</h3>
                     <div class="metrics-grid">
                         <div class="metric-card">
-                            <div class="metric-label">Precisión</div>
-                            <div class="metric-value iris-highlight">0.978</div>
+                            <div class="metric-label">Accuracy</div>
+                            <div class="metric-value iris-forest-highlight">0.911</div>
                         </div>
                         
                         <div class="metric-card">
-                            <div class="metric-label">Puntuación F1</div>
-                            <div class="metric-value iris-highlight">0.978</div>
+                            <div class="metric-label">Precision</div>
+                            <div class="metric-value iris-forest-highlight">0.916</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">Recall</div>
+                            <div class="metric-value iris-forest-highlight">0.911</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">F1-Score</div>
+                            <div class="metric-value iris-forest-highlight">0.911</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-label">AUC</div>
+                            <div class="metric-value iris-forest-highlight">0.991</div>
                         </div>
                     </div>
                 </div>
@@ -282,7 +356,7 @@
             
             <div class="interpretation-box">
                 <h3>Análisis comparativo</h3>
-                <p>El modelo de <span class="highlight">Random Forest superó al Árbol de Decisión</span> en todas las métricas, demostrando su mayor capacidad para capturar patrones complejos en los datos. Ambos modelos mostraron un excelente desempeño en este problema balanceado.</p>
+                <p>El <span class="highlight">Árbol de Decisión supera al Random Forest</span> en la mayoría de las métricas, excepto en AUC donde Random Forest tiene un ligero mejor desempeño (0.991 vs 0.990). Esto es inusual ya que normalmente se espera que Random Forest supere a un árbol individual.</p>
             </div>
             
             <h3>Patrones de clasificación</h3>
@@ -305,29 +379,35 @@
             
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-label">Precisión (Accuracy)</div>
+                    <div class="metric-label">Accuracy</div>
                     <div class="metric-value fraud-highlight">0.999</div>
                 </div>
                 
                 <div class="metric-card">
                     <div class="metric-label">Precision</div>
-                    <div class="metric-value fraud-highlight">0.917</div>
+                    <div class="metric-value fraud-highlight">0.826</div>
                 </div>
                 
                 <div class="metric-card">
-                    <div class="metric-label">Exhaustividad (Recall)</div>
-                    <div class="metric-value fraud-highlight">0.796</div>
+                    <div class="metric-label">Recall</div>
+                    <div class="metric-value fraud-highlight">0.770</div>
                 </div>
                 
                 <div class="metric-card">
-                    <div class="metric-label">Puntuación F1</div>
-                    <div class="metric-value fraud-highlight">0.852</div>
+                    <div class="metric-label">F1-Score</div>
+                    <div class="metric-value fraud-highlight">0.797</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Curva ROC</div>
+                    <div class="metric-value fraud-highlight">0.968</div>
                 </div>
             </div>
             
             <div class="interpretation-box">
                 <h3>Desafíos del desbalanceo</h3>
-                <p>Este dataset está extremadamente desbalanceado (menos del 0.2% de transacciones fraudulentas). Aunque la precisión general es muy alta, las métricas clave son <span class="highlight">Precision y Recall</span> para la clase minoritaria (fraudes).</p>
+                <p>Este dataset está extremadamente desbalanceado (menos del 0.2% de transacciones fraudulentas). Aunque la precisión general es muy alta (0.999), las métricas clave son <span class="highlight">Precision y Recall</span> para la clase minoritaria (fraudes).</p>
+                <p>El modelo identifica correctamente el 77% de los fraudes (recall) y cuando predice fraude, está en lo correcto el 82.6% de las veces (precision).</p>
             </div>
             
             <div class="chart-container">
@@ -343,25 +423,75 @@
         </section>
         
         <!-- SECCIÓN COMPARATIVA GENERAL -->
-        <section class="dataset-section">
+        <section class="dataset-section comparison-section">
             <div class="section-title">
                 <span class="icon">📊</span>
                 <h2>Comparativa General entre Modelos</h2>
             </div>
             
+            <h3>Resumen de Métricas por Modelo</h3>
             <div class="chart-container">
                 <canvas id="overallComparisonChart"></canvas>
             </div>
+            
+            <h3>Tabla Comparativa Detallada</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Modelo</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>AUC/ROC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Titanic (Árbol)</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                    </tr>
+                    <tr>
+                        <td>Iris (Árbol)</td>
+                        <td>0.978</td>
+                        <td>0.979</td>
+                        <td>0.978</td>
+                        <td>0.978</td>
+                        <td>0.990</td>
+                    </tr>
+                    <tr>
+                        <td>Iris (Random Forest)</td>
+                        <td>0.911</td>
+                        <td>0.916</td>
+                        <td>0.911</td>
+                        <td>0.911</td>
+                        <td>0.991</td>
+                    </tr>
+                    <tr>
+                        <td>Detección Fraude (RF)</td>
+                        <td>0.999</td>
+                        <td>0.826</td>
+                        <td>0.770</td>
+                        <td>0.797</td>
+                        <td>0.968</td>
+                    </tr>
+                </tbody>
+            </table>
             
             <div class="interpretation-box">
                 <h3>Conclusiones Generales</h3>
                 <p>Los tres problemas demuestran diferentes desafíos en clasificación:</p>
                 <ul>
-                    <li><span class="titanic-highlight">Titanic</span>: Problema balanceado con enfoque en interpretabilidad</li>
-                    <li><span class="iris-highlight">Iris</span>: Problema multiclase balanceado donde Random Forest supera al Árbol simple</li>
-                    <li><span class="fraud-highlight">Detección de fraude</span>: Problema extremadamente desbalanceado que requiere métricas específicas y ajuste de threshold</li>
+                    <li><span class="titanic-highlight">Titanic</span>: Rendimiento perfecto (posible sobreajuste)</li>
+                    <li><span class="iris-tree-highlight">Iris (Árbol)</span>: Alto rendimiento en dataset balanceado</li>
+                    <li><span class="iris-forest-highlight">Iris (Random Forest)</span>: Resultados inferiores al árbol individual (inusual)</li>
+                    <li><span class="fraud-highlight">Detección de fraude</span>: Problema desbalanceado con buen AUC (0.968)</li>
                 </ul>
-                <p>La selección del modelo y las métricas de evaluación deben alinearse con los objetivos específicos de cada problema.</p>
+                <p>La selección del modelo y las métricas de evaluación deben alinearse con los objetivos específicos de cada problema. En casos de desbalanceo, métricas como F1-Score y AUC son más informativas que el accuracy.</p>
             </div>
         </section>
         
@@ -377,10 +507,10 @@
         new Chart(titanicCtx, {
             type: 'radar',
             data: {
-                labels: ['Precisión', 'Recall', 'Precision', 'F1-Score'],
+                labels: ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'AUC'],
                 datasets: [{
                     label: 'Métricas Titanic',
-                    data: [0.810, 0.714, 0.759, 0.736],
+                    data: [1.000, 1.000, 1.000, 1.000, 1.000],
                     backgroundColor: 'rgba(52, 152, 219, 0.2)',
                     borderColor: 'rgba(52, 152, 219, 1)',
                     pointBackgroundColor: 'rgba(52, 152, 219, 1)',
@@ -390,6 +520,8 @@
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     r: {
                         angleLines: {
@@ -407,21 +539,23 @@
         new Chart(irisCtx, {
             type: 'bar',
             data: {
-                labels: ['Precisión', 'Precision', 'Recall', 'F1-Score', 'AUC'],
+                labels: ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'AUC'],
                 datasets: [
                     {
                         label: 'Árbol de Decisión',
-                        data: [0.956, 0.956, 0.956, 0.955, 0.994],
+                        data: [0.978, 0.979, 0.978, 0.978, 0.990],
                         backgroundColor: 'rgba(46, 204, 113, 0.7)',
                     },
                     {
                         label: 'Random Forest',
-                        data: [0.978, 0.978, 0.978, 0.978, 0.999],
+                        data: [0.911, 0.916, 0.911, 0.911, 0.991],
                         backgroundColor: 'rgba(39, 174, 96, 0.7)',
                     }
                 ]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -436,11 +570,12 @@
         new Chart(fraudCtx, {
             type: 'bar',
             data: {
-                labels: ['Precisión', 'Precision', 'Recall', 'F1-Score'],
+                labels: ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'AUC'],
                 datasets: [{
                     label: 'Métricas de Fraude',
-                    data: [0.999, 0.917, 0.796, 0.852],
+                    data: [0.999, 0.826, 0.770, 0.797, 0.968],
                     backgroundColor: [
+                        'rgba(231, 76, 60, 0.7)',
                         'rgba(231, 76, 60, 0.7)',
                         'rgba(231, 76, 60, 0.7)',
                         'rgba(231, 76, 60, 0.7)',
@@ -450,12 +585,15 @@
                         'rgba(231, 76, 60, 1)',
                         'rgba(231, 76, 60, 1)',
                         'rgba(231, 76, 60, 1)',
+                        'rgba(231, 76, 60, 1)',
                         'rgba(231, 76, 60, 1)'
                     ],
                     borderWidth: 1
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -473,18 +611,25 @@
                 labels: ['Titanic', 'Iris (Árbol)', 'Iris (RF)', 'Detección Fraude'],
                 datasets: [
                     {
-                        label: 'Precisión',
-                        data: [0.810, 0.956, 0.978, 0.999],
+                        label: 'Accuracy',
+                        data: [1.000, 0.978, 0.911, 0.999],
                         backgroundColor: 'rgba(52, 152, 219, 0.7)',
                     },
                     {
                         label: 'F1-Score',
-                        data: [0.736, 0.955, 0.978, 0.852],
+                        data: [1.000, 0.978, 0.911, 0.797],
                         backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                    },
+                    {
+                        label: 'AUC',
+                        data: [1.000, 0.990, 0.991, 0.968],
+                        backgroundColor: 'rgba(155, 89, 182, 0.7)',
                     }
                 ]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
